@@ -5,6 +5,7 @@ from src.extraction.extractor import Extractor
 from src.structuring.parser import Parser
 from src.validation.validator import Validator
 from src.validation.corrector import Corrector
+from src.postprocessing.rules import PostProcessor
 
 class FlowIQPipeline:
     def __init__(self, config=None):
@@ -16,7 +17,7 @@ class FlowIQPipeline:
         self.parser = Parser()
         self.validator = Validator()
         self.corrector = Corrector()
-        self.postprocessor = None
+        self.postprocessor = PostProcessor()
 
     def run(self, text: str):
         cleaned = self.cleaner.clean(text)
@@ -29,11 +30,12 @@ class FlowIQPipeline:
         steps = self.parser.parse(raw)
 
         issues = self.validator.validate(steps)
-                corrected = self.corrector.refine(steps, issues)
+        corrected = self.corrector.refine(steps, issues)
+        final_steps = self.postprocessor.apply(corrected)
 
         parsed_steps.append({
             "chunk_id": chunk["chunk_id"],
-            "steps": corrected,
+            "steps": final_steps,
             "issues": issues
         })
 
