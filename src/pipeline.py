@@ -1,4 +1,5 @@
 
+from src.utils.reader import FileReader
 from src.preprocessing.cleaner import Cleaner
 from src.chunking.chunker import Chunker
 from src.extraction.extractor import Extractor
@@ -10,6 +11,7 @@ from src.postprocessing.rules import PostProcessor
 class FlowIQPipeline:
     def __init__(self, config=None):
         self.config = config
+        self.reader = FileReader()
         self.cleaner = Cleaner()
         self.chunker = Chunker()
         self.extractor = Extractor()
@@ -39,3 +41,11 @@ class FlowIQPipeline:
             })
 
         return parsed_steps
+
+    def run_file(self, filepath: str):
+        text = self.reader.read(filepath)
+        return self.run(text)
+    
+    # To run:
+    # pipeline = FlowIQPipeline()
+    # result = pipeline.run_file("data/raw/procedure.docx")
