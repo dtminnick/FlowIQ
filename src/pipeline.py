@@ -3,6 +3,7 @@ from src.preprocessing.cleaner import Cleaner
 from src.chunking.chunker import Chunker
 from src.extraction.extractor import Extractor
 from src.structuring.parser import Parser
+from src.validation.validator import Validator
 
 class FlowIQPipeline:
     def __init__(self, config=None):
@@ -12,7 +13,7 @@ class FlowIQPipeline:
         self.chunker = Chunker()
         self.extractor = Extractor()
         self.parser = Parser()
-        self.validator = None
+        self.validator = Validator()
         self.corrector = None
         self.postprocessor = None
 
@@ -26,9 +27,12 @@ class FlowIQPipeline:
         raw = self.extractor.extract(chunk["text"])
         steps = self.parser.parse(raw)
 
+        issues = self.validator.validate(steps)
+
         parsed_steps.append({
             "chunk_id": chunk["chunk_id"],
-            "steps": steps
+            "steps": steps,
+            "issues": issues
         })
 
-        return parsed_steps
+    return parsed_steps
