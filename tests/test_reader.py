@@ -1,4 +1,7 @@
 
+# cd C:\Users\donni\FlowIQ
+# python -m tests.test_reader
+
 from src.utils.reader import FileReader
 from src.preprocessing.cleaner import Cleaner
 
