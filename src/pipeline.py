@@ -2,6 +2,7 @@
 from src.preprocessing.cleaner import Cleaner
 from src.chunking.chunker import Chunker
 from src.extraction.extractor import Extractor
+from src.structuring.parser import Parser
 
 class FlowIQPipeline:
     def __init__(self, config=None):
@@ -10,7 +11,7 @@ class FlowIQPipeline:
         self.cleaner = Cleaner()
         self.chunker = Chunker()
         self.extractor = Extractor()
-        self.parser = None
+        self.parser = Parser()
         self.validator = None
         self.corrector = None
         self.postprocessor = None
@@ -19,13 +20,15 @@ class FlowIQPipeline:
         cleaned = self.cleaner.clean(text)
         chunks = self.chunker.chunk(cleaned)
 
-    extracted = []
-    
+    parsed_steps = []
+
     for chunk in chunks:
         raw = self.extractor.extract(chunk["text"])
-        extracted.append({
+        steps = self.parser.parse(raw)
+
+        parsed_steps.append({
             "chunk_id": chunk["chunk_id"],
-            "raw_output": raw
+            "steps": steps
         })
 
-        return extracted
+        return parsed_steps
