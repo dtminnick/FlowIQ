@@ -10,7 +10,6 @@ from src.postprocessing.rules import PostProcessor
 class FlowIQPipeline:
     def __init__(self, config=None):
         self.config = config
-        # placeholders for modules
         self.cleaner = Cleaner()
         self.chunker = Chunker()
         self.extractor = Extractor()
@@ -23,20 +22,20 @@ class FlowIQPipeline:
         cleaned = self.cleaner.clean(text)
         chunks = self.chunker.chunk(cleaned)
 
-    parsed_steps = []
+        parsed_steps = []
 
-    for chunk in chunks:
-        raw = self.extractor.extract(chunk["text"])
-        steps = self.parser.parse(raw)
+        for chunk in chunks:
+            raw = self.extractor.extract(chunk["text"])
+            steps = self.parser.parse(raw)
 
-        issues = self.validator.validate(steps)
-        corrected = self.corrector.refine(steps, issues)
-        final_steps = self.postprocessor.apply(corrected)
+            issues = self.validator.validate(steps)
+            corrected = self.corrector.refine(steps, issues)
+            final_steps = self.postprocessor.apply(corrected)
 
-        parsed_steps.append({
-            "chunk_id": chunk["chunk_id"],
-            "steps": final_steps,
-            "issues": issues
-        })
+            parsed_steps.append({
+                "chunk_id": chunk["chunk_id"],
+                "steps": final_steps,
+                "issues": issues
+            })
 
-    return parsed_steps
+        return parsed_steps

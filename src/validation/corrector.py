@@ -14,7 +14,7 @@ class Corrector:
         response = self.client.generate(prompt)
         return self._parse_response(response)
 
-    def _build_prompt(self, steps: list[dict], issues: dict]) -> str:
+    def _build_prompt(self, steps: list[dict], issues: [dict]) -> str:
         return f"""
 You are an AI system that corrects procedural steps.
 
