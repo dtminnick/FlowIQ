@@ -10,7 +10,3 @@ description = "Process intelligence pipeline for extracting structured process m
 authors = [{ name = "Donnie Minnick" }]
 readme = "README.md"
 requires-python = ">=3.10"
-
-[tool.pytest.ini_options]
-pythonpath = ["src"]
-addopts = "-v"

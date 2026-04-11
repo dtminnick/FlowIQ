@@ -1,0 +1,33 @@
+Title: Employee Retirement Processing Procedure 
+NOTE: This document was compiled from multiple departmental sources. Some sections may reference outdated forms or systems. If contradictions occur, follow the most recent HR bulletin .
+- HR Records, Revision uncertain 
+Before initiating the retirement processing workflow, confirm that the employee has submitted a formal Notice of Intent to Retire . If the notice is missing, illegible, or dated more than 18 months in the future, escalate to HR Compliance.
+- WARNING: Do not begin retirement processing if the employee is currently on medical leave, administrative leave, or "special assignment" .
+PRE-PROCESSING CHECKLIST 
+Employee personnel file 
+Retirement eligibility calculator 
+Access to Payroll System 
+Benefits Handbook 
+Verification of last working day 
+Supervisor acknowledgment email 
+Optional: tissues 
+RETIREMENT OPERATIONS PROCEDURE
+
+- Verify the employee's eligibility for retirement. Use the Retirement Eligibility Calculator. If the calculator displays "#VALUE!", close and reopen. If it displays "Not Eligible," confirm the employee's hire date .
+- Confirm the employee's final working day. If the date on Form R-12 conflicts with the supervisor's email, use the date in the HRIS system unless the employee verbally stated otherwise. If all three dates differ, schedule a clarification meeting.
+- Generate the Retirement Packet. This may include:
+Form R-14 
+Form R-15 
+Form R-15B 
+Form R-16 
+- Form R-17  If the packet generator tool crashes, assemble the packet manually using the shared drive folder "RETIREMENT_OLD" or "RETIREMENT_NEW_FINAL2".
+- Meet with the employee to review the packet. If the employee becomes emotional, pause the meeting. If the employee asks about Social Security, refer them to the SSA website . If the employee asks about unused vacation payout, check Payroll System version compatibility first.
+- Collect completed forms. Ensure all signatures are present. If the employee signs in the wrong place, attach a sticky note explaining the correction. If the employee refuses to sign Form R-17 , mark "Declined" and initial.
+- Process the pension election. Submit Form R-14 to the Pension Administration Portal. If the portal displays "Error 504," retry up to three times. If the portal displays "Error 901," contact Pension Support .
+- Notify Payroll of the retirement. Use the "Retirement Notification" workflow in PS-One. If using PS-Two, use the "Separation - Retirement" workflow instead. If using Legacy Payroll, send an email to  with subject line "RET-PROC-[EmployeeID]".
+- Verify equipment return. Use Form R-16. If the employee has missing items , notify Facilities. If the employee insists they returned everything, check the "Unassigned Equipment Closet" .
+- Conduct the exit interview. If the employee prefers not to participate, record "Declined." If the employee provides feedback about supervisors, forward to HR Business Partner. If the employee provides feedback about the coffee machine, disregard.
+- Update HRIS status to "Retired." If the system rejects the update, verify that all workflows have been completed. If the system still rejects the update, log a ticket with IT .
+- Send the Retirement Confirmation Letter. Use template "Retirement_Letter_2020_FINAL_FINAL.docx" unless instructed otherwise. If the template contains placeholders like "[INSERT NAME HERE]," replace them manually.
+- Archive the employee's file. Digital files go into the "RET_ARCHIVE" directory. Paper files go into Cabinet 4, Drawer 2, unless Drawer 2 is full . If both drawers are full, place the file in the "TEMP HOLD" box and notify Records.
+- Conduct the 30-day follow-up. Confirm pension activation, health coverage continuation, and final payout accuracy. If discrepancies are found, open a "Post-Retirement Adjustment" case. If the employee cannot be reached, send a letter via certified mail.

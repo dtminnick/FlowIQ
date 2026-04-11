@@ -1,6 +1,8 @@
 
 import docx
-import PyPDF2
+# import PyPDF2
+from pypdf import PdfReader
+
 
 class FileReader:
     def read(self, filepath: str) -> str:
@@ -18,7 +20,7 @@ class FileReader:
     def _read_pdf(self, filepath: str) -> str:
         text = []
         with open(filepath, "rb") as f:
-            reader = PyPDF2.PdfReader(f)
+            reader = PdfReader(f)
             for page in reader.pages:
                 text.append(page.extract_text() or "")
         return "\n".join(text)
