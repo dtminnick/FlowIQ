@@ -60,3 +60,5 @@ flowchart TD
     end
 
 ```
+
+For a detailed view of FlowIQ’s internal architecture, see [Architecture Overview](docs/architecture.md).
