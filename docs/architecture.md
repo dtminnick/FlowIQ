@@ -37,7 +37,7 @@ flowchart LR
         ConfigFiles[Configuration Files]
     end
 
-    subgraph Utils
+    subgraph Utilities
         Utils[Utility Functions]
     end
 
