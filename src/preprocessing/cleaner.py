@@ -1,14 +1,27 @@
 import unicodedata
 import re
+import yaml
+import os
 
 class Cleaner:
     def __init__(self, config = None):
         self.config = config or {}
+
+        config_path = self.config.get("verbs_path", "config/verbs.yaml")
+
+        if os.path.exists(config_path):
+            with open(config_path, "r") as f:
+                verb_config = yaml.safe_load(f)
+                self.common_verbs = set(verb_config.get("common_verbs", []))
+        else:
+            self.common_verbs = set()
+
         self.steps = [
             self._normalize_unicode,
             self._fix_line_breaks,
             self._collapse_repeated_whitespace,
             self._standardize_bullets,
+            self._strip_whitespace,
             self._enforce_step_structure,
         ]
 
@@ -22,7 +35,7 @@ class Cleaner:
             self._remove_emojis,
             self._normalize_repeated_punctuation,
             self._remove_nonprintable,
-            self._strip_whitespace
+            self._remove_empty_lines
         ])
 
     def clean(self, text: str) -> str:
@@ -86,13 +99,7 @@ class Cleaner:
         # Starts with a verb-like word (simple heuristic)
         first_word = line.split()[0].lower()
 
-        common_verbs = {
-            "verify", "confirm", "generate", "meet", "collect",
-            "process", "notify", "update", "send", "archive",
-            "conduct", "check", "use", "submit", "review"
-        }
-
-        if first_word in common_verbs:
+        if first_word in self.common_verbs:
             return True
 
         # Lines starting with "if" → decision steps
@@ -105,8 +112,16 @@ class Cleaner:
 
         return False
     
+    def _remove_empty_lines(self, text: str) -> str:
+        lines = text.split("\n")
+        cleaned = [line for line in lines if line.strip()]
+        return "\n".join(cleaned)
+
     def _standardize_bullets(self, text: str) -> str:
-        return text.replace("•", "-").replace("·", "-").replace("*", "-")
+        text = re.sub(r"^\s*\d+[\.\)]\s+", "- ", text, flags=re.MULTILINE)
+        text = re.sub(r"^\s*[a-zA-Z][\.\)]\s+", "- ", text, flags=re.MULTILINE)
+
+        return text
     
     def _tag_urls(self, text: str) -> str:
         url_pattern = r"(https?://\S+|www\.\S+)"
