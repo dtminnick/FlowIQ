@@ -4,38 +4,44 @@ Process intelligence pipeline for extracting structured process models from stan
 
 ```mermaid
 flowchart TD
-    A[Raw Procedure Document] --> B[Preprocessing]
-    B --> C[Chunking]
-    C --> D[Extraction]
-    D --> E[Structuring]
-    E --> F[Validation]
-    F --> G[Postprocessing]
-    G --> H[Final Structured Process Model]
+    A[Raw Procedure Document] --> B[preprocessing/]
+    B --> C[chunking/]
+    C --> D[extraction/]
+    D --> E[structuring/]
+    E --> F[validation/]
+    F --> G[postprocessing/]
+    G --> H[Structured Process Model]
 
-    subgraph Preprocessing
+    %% Proprocessing
+    subgraph preprocessing/
         B1[Cleaner]
     end
 
-    subgraph Chunking
+    %% Chunking
+    subgraph chunking/
         C1[Chunker]
     end
 
-    subgraph Extraction
+    %% Extraction
+    subgraph extraction/
         D1[Extractor]
         D2[LLM Client]
         D3[Prompts]
     end
 
-    subgraph Structuring
+    %% Structuring
+    subgraph structuring/
         E1[Parser]
     end
 
-    subgraph Validation
+    %% Validation
+    subgraph validation/
         F1[Validator]
         F2[Corrector]
     end
 
-    subgraph Postprocessing
+    %% Postprocessing
+    subgraph postprocessing/
         G1[Formatter / Exporter]
     end
 ```
