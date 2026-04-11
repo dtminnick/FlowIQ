@@ -9,6 +9,7 @@ class Cleaner:
             self._fix_line_breaks,
             self._collapse_repeated_whitespace,
             self._standardize_bullets,
+            self._enforce_step_structure,
         ]
 
         if self.config.get("tag_urls", True):
@@ -47,6 +48,62 @@ class Cleaner:
         text = re.sub(r"\n{3,}", "\n\n", text)
 
         return text
+    
+    def _enforce_step_structure(self, text: str) -> str:
+        lines = text.split("\n")
+        updated = []
+
+        for line in lines:
+            stripped = line.strip()
+
+            if not stripped:
+                updated.append(line)
+                continue
+
+            # Already a bullet → keep
+            if stripped.startswith("-"):
+                updated.append(line)
+                continue
+
+            # Skip obvious headers (ALL CAPS, short)
+            if self._is_header(stripped):
+                updated.append(line)
+                continue
+
+            # Detect step-like lines
+            if self._looks_like_step(stripped):
+                updated.append(f"- {stripped}")
+            else:
+                updated.append(line)
+
+        return "\n".join(updated)
+    
+    def _is_header(self, line: str) -> bool:
+        # All caps and relatively short
+        return line.isupper() and len(line.split()) <= 6
+    
+    def _looks_like_step(self, line: str) -> bool:
+        # Starts with a verb-like word (simple heuristic)
+        first_word = line.split()[0].lower()
+
+        common_verbs = {
+            "verify", "confirm", "generate", "meet", "collect",
+            "process", "notify", "update", "send", "archive",
+            "conduct", "check", "use", "submit", "review"
+        }
+
+        if first_word in common_verbs:
+            return True
+
+        # Lines starting with "if" → decision steps
+        if line.lower().startswith("if "):
+            return True
+
+        # Lines ending with a period and reasonably short → likely step
+        if line.endswith(".") and len(line.split()) < 25:
+            return True
+
+        return False
     
     def _standardize_bullets(self, text: str) -> str:
         return text.replace("•", "-").replace("·", "-").replace("*", "-")
