@@ -20,8 +20,8 @@ class Cleaner:
             self._normalize_unicode,
             self._fix_line_breaks,
             self._collapse_repeated_whitespace,
-            self._standardize_bullets,
             self._strip_whitespace,
+            self._standardize_bullets,
             self._enforce_step_structure,
         ]
 
@@ -92,9 +92,32 @@ class Cleaner:
         return "\n".join(updated)
     
     def _is_header(self, line: str) -> bool:
-        # All caps and relatively short
-        return line.isupper() and len(line.split()) <= 6
-    
+        stripped = line.strip()
+
+        # Too long → probably not a header
+        if len(stripped.split()) > 6:
+            return False
+
+        # ALL CAPS short lines → likely header
+        if stripped.isupper():
+            return True
+
+        # Title Case (e.g., "Processing Steps")
+        if stripped.istitle():
+            return True
+
+        # Ends with a colon (e.g., "Procedure:")
+        if stripped.endswith(":"):
+            return True
+
+        # Contains no verbs (headers are usually noun phrases)
+        first_word = stripped.split()[0].lower()
+        if first_word not in self.common_verbs:
+            # If it's short and noun-like, treat as header
+            return True
+
+        return False
+
     def _looks_like_step(self, line: str) -> bool:
         # Starts with a verb-like word (simple heuristic)
         first_word = line.split()[0].lower()
@@ -114,14 +137,27 @@ class Cleaner:
     
     def _remove_empty_lines(self, text: str) -> str:
         lines = text.split("\n")
-        cleaned = [line for line in lines if line.strip()]
+        cleaned = []
+        prev_blank = False
+
+        for line in lines:
+            if not line.strip():
+                # allow a single blank line, but not multiple
+                if not prev_blank:
+                    cleaned.append("")
+                prev_blank = True
+            else:
+                cleaned.append(line)
+                prev_blank = False
+
         return "\n".join(cleaned)
 
     def _standardize_bullets(self, text: str) -> str:
-        text = re.sub(r"^\s*\d+[\.\)]\s+", "- ", text, flags=re.MULTILINE)
-        text = re.sub(r"^\s*[a-zA-Z][\.\)]\s+", "- ", text, flags=re.MULTILINE)
-
+        # Normalize common bullet characters to "-"
+        bullet_chars = r"[•·*]"
+        text = re.sub(rf"^\s*{bullet_chars}\s+", "- ", text, flags=re.MULTILINE)
         return text
+
     
     def _tag_urls(self, text: str) -> str:
         url_pattern = r"(https?://\S+|www\.\S+)"
