@@ -1,0 +1,34 @@
+
+header_rules:
+
+  # Maximum number of words allowed for a header
+  max_words: 6
+
+  # Treat ALL CAPS short lines as headers
+  detect_all_caps: true
+
+  # Treat Title Case short lines as headers
+  detect_title_case: true
+
+  # Treat lines ending with ":" as headers
+  detect_colon_suffix: true
+
+  # If true, treat short lines with no verbs as headers
+  detect_no_verb: true
+
+  # Optional: list of known header keywords (case-insensitive)
+  # These are common across SOPs but not required
+  keywords:
+    - purpose
+    - scope
+    - definitions
+    - responsibilities
+    - procedure
+    - overview
+    - requirements
+    - references
+    - materials
+    - equipment
+    - steps
+    - process
+    - summary

@@ -16,6 +16,9 @@ class Cleaner:
         else:
             self.common_verbs = set()
 
+        with open("config/headers.yaml", "r") as f:
+            self.header_rules = yaml.safe_load(f)["header_rules"]
+
         self.steps = [
             self._normalize_unicode,
             self._fix_line_breaks,
@@ -92,28 +95,32 @@ class Cleaner:
         return "\n".join(updated)
     
     def _is_header(self, line: str) -> bool:
+        rules = self.header_rules
         stripped = line.strip()
 
-        # Too long → probably not a header
-        if len(stripped.split()) > 6:
+        # Word count rule
+        if len(stripped.split()) > rules["max_words"]:
             return False
 
-        # ALL CAPS short lines → likely header
-        if stripped.isupper():
+        # ALL CAPS rule
+        if rules["detect_all_caps"] and stripped.isupper():
             return True
 
-        # Title Case (e.g., "Processing Steps")
-        if stripped.istitle():
+        # Title Case rule
+        if rules["detect_title_case"] and stripped.istitle():
             return True
 
-        # Ends with a colon (e.g., "Procedure:")
-        if stripped.endswith(":"):
+        # Colon suffix rule
+        if rules["detect_colon_suffix"] and stripped.endswith(":"):
             return True
 
-        # Contains no verbs (headers are usually noun phrases)
+        # Keyword rule
+        if stripped.lower() in rules.get("keywords", []):
+            return True
+
+        # No-verb rule
         first_word = stripped.split()[0].lower()
-        if first_word not in self.common_verbs:
-            # If it's short and noun-like, treat as header
+        if rules["detect_no_verb"] and first_word not in self.common_verbs:
             return True
 
         return False
