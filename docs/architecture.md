@@ -33,12 +33,12 @@ flowchart LR
         Formatter[Formatter / Exporter]
     end
 
-    subgraph Utils
-        Utils[Utility Functions]
+    subgraph ConfigLayer
+        ConfigFiles[Configuration Files]
     end
 
-    subgraph Config
-        Config[Configuration Files]
+    subgraph Utils
+        Utils[Utility Functions]
     end
 
     %% Relationships
@@ -59,5 +59,6 @@ flowchart LR
     Validator --> Utils
     Formatter --> Utils
 
-    P --> Config
+    P --> ConfigFiles
+
 ```
