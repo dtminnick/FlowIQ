@@ -1,3 +1,4 @@
+```mermaid
 
 flowchart LR
 
@@ -59,3 +60,4 @@ flowchart LR
     Formatter --> Utils
 
     P --> Config
+```
