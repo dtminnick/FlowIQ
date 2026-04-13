@@ -160,12 +160,18 @@ class Cleaner:
         return "\n".join(cleaned)
 
     def _standardize_bullets(self, text: str) -> str:
-        # Normalize common bullet characters to "-"
-        bullet_chars = r"[•·*]"
+        # Common bullet characters
+        bullet_chars = r"[•·*o→]"
         text = re.sub(rf"^\s*{bullet_chars}\s+", "- ", text, flags=re.MULTILINE)
+
+        # Numbered bullets
+        text = re.sub(r"^\s*\d+[\.\)]\s+", "- ", text, flags=re.MULTILINE)
+
+        # Lettered bullets
+        text = re.sub(r"^\s*[A-Za-z][\.\)]\s+", "- ", text, flags=re.MULTILINE)
+
         return text
 
-    
     def _tag_urls(self, text: str) -> str:
         url_pattern = r"(https?://\S+|www\.\S+)"
         
