@@ -45,8 +45,15 @@ class Cleaner:
         for step in self.steps:
             text = step(text)
 
+        # Now split into lines for checklist normalization
+        lines = text.split("\n")
+        lines = self._normalize_checklists(lines)
+
+        # Rejoin
+        text = "\n".join(lines)
+
         return text
-    
+
     def _strip_whitespace(self, text: str) -> str:
         return text.strip()
     
@@ -213,3 +220,55 @@ class Cleaner:
 
     def _remove_nonprintable(self, text: str) -> str:
         return "".join(ch for ch in text if ch.isprintable() or ch == "\n")
+    
+    def _normalize_checklists(self, lines):
+        import re
+
+        output = []
+        i = 0
+
+        while i < len(lines):
+            line = lines[i]
+
+            # Detect a checklist header
+            if re.search(r'\bCHECKLIST\b', line, re.IGNORECASE):
+                output.append(line)
+                i += 1
+
+                checklist_block = []
+
+                while i < len(lines):
+                    item = lines[i].strip()
+
+                    # Stop if blank or next header/section
+                    if not item:
+                        break
+
+                    # Stop if already bulleted or numbered
+                    if re.match(r'^[-*•]\s+', item) or re.match(r'^\d+[\.\)]\s+', item):
+                        break
+
+                    # Stop if punctuation suggests it's not a checklist item
+                    if re.search(r'[.,:;!?()\[\]]', item):
+                        break
+
+                    # Stop if not capitalized
+                    if not re.match(r'^[A-Z]', item):
+                        break
+
+                    checklist_block.append(item)
+                    i += 1
+
+                # Convert only if we found at least 2 items
+                if len(checklist_block) >= 2:
+                    for item in checklist_block:
+                        output.append(f"- {item}")
+                else:
+                    for item in checklist_block:
+                        output.append(item)
+
+            else:
+                output.append(line)
+                i += 1
+
+        return output
